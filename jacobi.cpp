@@ -44,19 +44,27 @@ void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
 	a_kk = A(k,k); 
 	a_kl = A(k,l); 
 	a_ll = A(l,l); 
-	tau = (a_ll-a_kk)/2*a_kl; 
-	if (tau>0) {
-		t = 1./(tau+sqrt(1+tau*tau)); 
+	if (A(k,l) != 0) {
+		tau = (a_ll-a_kk)/(2.0*a_kl); 
+		if (tau>0) {
+			t = 1./(tau+sqrt(1+tau*tau)); 
+		}
+		else {
+			t = -1./(-tau+sqrt(1+tau*tau)); 
+			
+		}
+		c = 1./sqrt(1+t*t); 	// calculating cos(theta)
+		s = c*t; 
 	}
 	else {
-		t = -1./(-tau+sqrt(1+tau*tau)); 
+		c = 1.0; 	// calculating cos(theta)
+		s = 0.0; 	
 	}
-	c = 1./sqrt(1+t*t); 	// calculating cos(theta)
-	s = c*t; 		// calculating sin(theta)
+	
 	
 	// Updating A-matrix at diagonal and maximapoints
-	A(k,k) = a_kk*c*c - 2*a_kl*c*s + a_ll*s*s; 
-	A(l,l) = a_ll*c*c + 2*a_kl*c*s + a_kk*s*s; 
+	A(k,k) = a_kk*c*c - 2.0*a_kl*c*s + a_ll*s*s; 
+	A(l,l) = a_ll*c*c + 2.0*a_kl*c*s + a_kk*s*s; 
 	A(k,l) = 0; 
 	A(l,k) = 0; 
 	for (int i = 0; i<N; i++) {

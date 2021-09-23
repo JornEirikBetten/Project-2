@@ -23,6 +23,7 @@ int main(int argc, char const *argv[])
 	mat eigvecs1;   
 	eig_sym(eigval1, eigvecs1, A); 
 	cout << eigval1 << endl; 
+	cout << eigvecs1 << endl; 
 	Jacobi mySolver; 
 	double epsilon = pow(10.0, -8.0); 
 	double max_offdiag; 
@@ -34,6 +35,7 @@ int main(int argc, char const *argv[])
 	mySolver.jacobi_eigensolver(A, epsilon, eigval, eigvecs, maximum_iterations, iterations, converged); 
 	cout << A << endl; 
 	cout << eigval << endl; 
+	cout << eigvecs << endl; 
 	cout << iterations << endl; 
 	
 	
