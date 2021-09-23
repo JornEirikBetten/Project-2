@@ -20,8 +20,8 @@ double Jacobi::max_offdiag_symmetric(const mat& A, int& k, int& l) {
 		// k and l their new appropriate numbers. 
 		for (int i=0; i<N; i++) {
 			for (int j=i+1; j<N; j++) {
-				if (abs(A(i,j)) > maxval) {
-					maxval = A(i,j);
+				if (abs(A(i,j)) >= maxval) {
+					maxval = abs(A(i,j));
 					k = i; 
 					l = j; 
 				}
@@ -31,7 +31,8 @@ double Jacobi::max_offdiag_symmetric(const mat& A, int& k, int& l) {
 	
 	}
 	else {
-	 cout << "Matrix is either not square or N isn't larger than 1"; 
+	 cout << "Matrix is either not square or N isn't larger than 1";
+	 return 0;  
 	}
 
 }
@@ -44,7 +45,7 @@ void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
 	a_kl = A(k,l); 
 	a_ll = A(l,l); 
 	tau = (a_ll-a_kk)/2*a_kl; 
-	if (tau>=0) {
+	if (tau>0) {
 		t = 1./(tau+sqrt(1+tau*tau)); 
 	}
 	else {
@@ -68,8 +69,8 @@ void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
 		double a_ik,a_il; 
 		a_ik = A(i,k); 
 		a_il = A(i,l); 
-		A(i,k) = a_ik - a_il;
-		A(i,l) = a_il + a_ik; 
+		A(i,k) = a_ik*c - a_il*s;
+		A(i,l) = a_il*c + a_ik*s; 
 		A(k,i) = A(i,k); 
 		A(l,i) = A(i,l);  
 	}
