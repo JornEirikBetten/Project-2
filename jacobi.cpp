@@ -38,12 +38,13 @@ double Jacobi::max_offdiag_symmetric(const mat& A, int& k, int& l) {
 }
 // Rotation algorithm
 void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
-	int N = A.n_rows;
-	double tau, t, c, s; 
-	double a_kk, a_kl, a_ll; 
+	int N = A.n_rows; // extracting N
+	double tau, t, c, s; // defining tau, tan(theta), cos(theta), sin(theta)
+	double a_kk, a_kl, a_ll; //defining and calculating diagonal and max elements
 	a_kk = A(k,k); 
 	a_kl = A(k,l); 
 	a_ll = A(l,l); 
+	// calculating tau and tan(theta)
 	if (A(k,l) != 0) {
 		tau = (a_ll-a_kk)/(2.0*a_kl); 
 		if (tau>0) {
@@ -54,11 +55,11 @@ void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
 			
 		}
 		c = 1./sqrt(1+t*t); 	// calculating cos(theta)
-		s = c*t; 
+		s = c*t; 		// calculating sin(theta)
 	}
 	else {
-		c = 1.0; 	// calculating cos(theta)
-		s = 0.0; 	
+		c = 1.0; 	// calculating cos(theta) in special case
+		s = 0.0; 	// calculating sin(theta) in special case
 	}
 	
 	
@@ -67,6 +68,7 @@ void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
 	A(l,l) = a_ll*c*c + 2.0*a_kl*c*s + a_kk*s*s; 
 	A(k,l) = 0; 
 	A(l,k) = 0; 
+	// Updating elements at kth and lth row and column
 	for (int i = 0; i<N; i++) {
 		if (i==k) {
 			continue; 
@@ -93,7 +95,10 @@ void Jacobi::jacobi_rotate(mat& A, mat& R, int k, int l) {
 
 
 }
-
+// Algorithm to solve eigenvalue-problem
+// The program will run untill all non-diagonal elements of matrix A
+// is lower than eps(tolerance). 
+//
 void Jacobi::jacobi_eigensolver(mat& A, double eps, vec& eigenvalues, mat& eigenvectors, const int maxiter, int& iterations, bool& converged) {
 	int k, l; 
 	int N = A.n_rows; 
@@ -114,7 +119,8 @@ void Jacobi::jacobi_eigensolver(mat& A, double eps, vec& eigenvalues, mat& eigen
 	}
 
 }
-
+// Attempt at swapping columns of the eigenvector matrix
+// so that it is more easily accessible to use when outputted. 
 void Jacobi::swap_columns(mat& A, int col1, int col2) {
 	int N = A.n_rows; 
 	double temp; 
@@ -128,7 +134,8 @@ void Jacobi::swap_columns(mat& A, int col1, int col2) {
 	}
 
 }
-
+// Attempt at sorting the columns of eigenvector matrix 
+// so that it would match ascending order of eigenvalues
 void Jacobi::sort_cols(mat& A, vec& eigenvalues) {
 	int N = A.n_rows; 
 	double val; 
@@ -151,7 +158,7 @@ void Jacobi::sort_cols(mat& A, vec& eigenvalues) {
 
 
 }
-
+// Writing output to file. Used to write eigenvectors and eigenvalues. 
 void Jacobi::write_to_csv(mat& eigvec, vec& eigval, string filename) {
 	int N = eigvec.n_rows; 
 	ofstream file; 

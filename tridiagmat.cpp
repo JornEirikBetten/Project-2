@@ -39,7 +39,8 @@ mat TriDiagMat::initialize_from_vectors(int N, const vec& a, const vec& d, const
 	return A; 
 
 }
-
+// Initializing a dense matrix where all non-diagonal elements are equal to a, and 
+// all diagonal elements are equal to d
 mat TriDiagMat::initialize_dense_from_scalars(int N, double a, double d) {
 	mat A = ones(N, N)*a; 
 	for (int i=0; i<N; i++) {
