@@ -114,3 +114,72 @@ void Jacobi::jacobi_eigensolver(mat& A, double eps, vec& eigenvalues, mat& eigen
 	}
 
 }
+
+void Jacobi::swap_columns(mat& A, int col1, int col2) {
+	int N = A.n_rows; 
+	double temp; 
+	if (col1<N && col2<N && col1 != col2) {
+		for (int i=0; i<N; i++) {
+			temp = A(i, col1); 
+			A(i,col1) = A(i,col2);
+			A(i,col2) = temp;  
+		}
+	
+	}
+
+}
+
+void Jacobi::sort_cols(mat& A, vec& eigenvalues) {
+	int N = A.n_rows; 
+	double val; 
+	int count;  
+	for (int i=0; i<N; i++) {
+		count = 0; 
+		for (int j=0; j<N; j++) {
+			if (j==i) {
+				continue; 
+			}
+			if (eigenvalues(i) > eigenvalues(j)) {
+				count += 1; 
+			}
+		}
+		swap_columns(A, i, count); 
+		
+	
+	}
+	sort(eigenvalues.begin(), eigenvalues.end()); 
+
+
+}
+
+void Jacobi::write_to_csv(mat& eigvec, vec& eigval, string filename) {
+	int N = eigvec.n_rows; 
+	ofstream file; 
+	file.open(filename); 
+	file << "x,"; 
+	file.precision(4); 
+	file.scientific; 
+	for (int i=0; i<N; i++) {
+		file << eigval(i) << ",";
+	}
+	file << "\n"; 
+	for (int i=0; i<N; i++) {
+		file << "0.0000e+0,"; 
+	}
+	file << "0.0000e+0\n"; 
+	for (int i=0; i<N; i++) {
+		file << float(i+1)/(float(N)+1.0) << ","; 
+		for (int j=0; j<N; j++) {
+			file << eigvec(i,j) << ","; 
+		}
+		file << "\n"; 
+	
+	}
+	file << "1.0000e+0, "; 
+	for (int i=0; i<N-1; i++) {
+		file << "0.0000e+0,"; 
+	}
+	file << "0.0000e+0\n"; 
+
+}
+

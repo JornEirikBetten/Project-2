@@ -19,7 +19,6 @@ mat TriDiagMat::initialize_from_scalars(int N, double a, double d, double e) {
 }
 
 
-
 mat TriDiagMat::initialize_symmetric_from_scalars(int N, double a, double d) {
 	return initialize_from_scalars(N, a, d, a); 
 }
@@ -41,4 +40,11 @@ mat TriDiagMat::initialize_from_vectors(int N, const vec& a, const vec& d, const
 
 }
 
+mat TriDiagMat::initialize_dense_from_scalars(int N, double a, double d) {
+	mat A = ones(N, N)*a; 
+	for (int i=0; i<N; i++) {
+		A(i,i) = d; 
+	}
+	return A; 
+}
 
