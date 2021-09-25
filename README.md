@@ -1,5 +1,6 @@
 # Project-2
-Contains all code and some data from Project 2, in the course FYS4150. 
+Contains all code and some data from Project 2, in the course FYS4150. <br>
+The code solves an eigenvalue problem using Jacobi's rotational algorithm. <br> 
 
 
 # Run code
