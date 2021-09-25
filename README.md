@@ -3,7 +3,7 @@ Contains all code and some data from Project 2, in the course FYS4150.
 
 
 # Run code
-To run the code, just clone repository, cd to this directory and type "make" in terminal. <br>
+To run the code, clone repository, cd to this directory and type "make" in terminal. <br>
 Then type ./jacobisolver "Number for N". <br>
 To run the code for problem 3, cd to this repository and type "make -f makefileprob3" and <br>
 then run ./prob3 to get output in terminal. <br>
