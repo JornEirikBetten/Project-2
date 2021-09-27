@@ -1,0 +1,19 @@
+# Comment lines
+# General makefile for c++ - choose PROG = name of given program
+# Here we define compiler option, libraries and the target 
+CPPflags=c++ -O3
+# Here we define the library functions needed 
+LIB = -larmadillo -llapack -lblas
+# Here we define the name of the executable
+PROG=prob5b
+${PROG} : 	prob5b.o tridiagmat.o jacobi.o
+		${CPPflags} prob5b.o tridiagmat.o jacobi.o ${LIB} -o ${PROG}
+prob5b.o : 				prob5b.cpp
+					${CPPflags} -c prob5b.cpp
+tridiagmat.o : 		tridiagmat.cpp
+					${CPPflags} -c tridiagmat.cpp
+jacobi.o : 				jacobi.cpp
+					${CPPflags} -c jacobi.cpp
+
+
+		

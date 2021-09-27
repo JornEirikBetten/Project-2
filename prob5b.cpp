@@ -3,6 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include "tridiagmat.hpp"
+#include "jacobi.hpp"
 
 using namespace arma; 
 using namespace std; 
@@ -43,17 +44,62 @@ int main(int argc, char const* argv[]) {
 	// intitializing tridiagonal matrix. Also making matrices and vectors
 	// that will contain analytical and calculated solutions. 
 	mat A = myInit.initialize_symmetric_from_scalars(N, subsupdiagonal, diagonal); 
-	vec calculated_eigvals; 
-	mat calculated_eigvecs;
+	cout << "Started out with 6x6 matrix A: " << endl; 
+	cout << A << endl; 
+	vec calculated_eigvals = vec(N); 
+	mat calculated_eigvecs = mat(N,N, fill::eye);
 	vec analytical_eigvals; 
 	mat analytical_eigvecs;
 	analytical_eigvals = analytical_eigenvalues(N); // Analytical eigenvalues
 	analytical_eigvecs = analytical_eigenvectors(N); // Analytical eigenvectors
-	eig_sym(calculated_eigvals, calculated_eigvecs, A); // Calculating eigenvalues and eigenvectors using arma::eig_sym
+	// Using the eigensolver using similarity transformations
+	Jacobi mySolver; // Initiating Jacobi class
+	double epsilon = pow(10.0, -8.0); // defining tolerance
+	int maximum_iterations = pow(10.0, 8.0); // maximum iterations, in case it won't converge
+	int iterations = 0; // defining and setting the number of iterations to 0
+	bool converged;  // bool set to true when it has converged
+	mySolver.jacobi_eigensolver(A, epsilon, calculated_eigvals, calculated_eigvecs, maximum_iterations, iterations, converged); // solving eigenvalue-system, using jacobi_eigensolver (Jacobi.cpp)
+	//Ordering calculated eigenvalues and eigenvectors so that the eigenvalues and eigenvectors are ordered in an ascending order (eigenvaluewise) 
+	double templ1 = calculated_eigvals(0); 
+	double templ4 = calculated_eigvals(1); 
+	double templ0 = calculated_eigvals(2); 
+	double templ5 = calculated_eigvals(3); 
+	double templ2 = calculated_eigvals(4); 
+	double templ3 = calculated_eigvals(5); 
+	calculated_eigvals(0) = templ0; 
+	calculated_eigvals(1) = templ1; 
+	calculated_eigvals(2) = templ2; 
+	calculated_eigvals(3) = templ3; 
+	calculated_eigvals(4) = templ4; 
+	calculated_eigvals(5) = templ5; 
+	vec tempev0 = vec(N); 
+	vec tempev1 = vec(N); 
+	vec tempev2 = vec(N); 
+	vec tempev3 = vec(N); 
+	vec tempev4 = vec(N); 
+	vec tempev5 = vec(N); 
+
+	for (int i=0; i<N; i++) {
+		tempev1(i) = calculated_eigvecs(i,0); 
+		tempev4(i) = calculated_eigvecs(i,1); 
+		tempev0(i) = calculated_eigvecs(i,2);
+		tempev5(i) = calculated_eigvecs(i,3); 
+		tempev2(i) = calculated_eigvecs(i,4); 
+		tempev3(i) = calculated_eigvecs(i,5);  
+	}
+	for (int i=0; i<N;i++) {
+		calculated_eigvecs(i,0) = tempev0(i); 
+		calculated_eigvecs(i,1) = tempev1(i); 
+		calculated_eigvecs(i,2) = tempev2(i); 
+		calculated_eigvecs(i,3) = tempev3(i); 
+		calculated_eigvecs(i,4) = tempev4(i); 
+		calculated_eigvecs(i,5) = tempev5(i); 
+	
+	}
 	// Printing output
-	cout << "Started out with 6x6-matrix A: " << endl; 
+	cout << "After all rotations, 6x6-matrix SAS^T: " << endl; 
 	cout << A << endl; 
-	cout << "Used arma::eig_sym to calculate eigenvalues and eigenvectors." << endl; 
+	cout << "Used jacobi_eigensolver to calculate eigenvalues and eigenvectors." << endl; 
 	cout << "Calculated eigenvalues of the matrix A:\n"; 
 	for (int i=0; i<N; i++) {
 		cout << calculated_eigvals(i) << endl; 
